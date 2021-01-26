@@ -1,14 +1,17 @@
 import { Card, Button, CardTitle, CardText } from 'reactstrap';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
+  const [isActive, setIsActive] = useState(false);
 
   const Stop = () => {
+    setIsActive(false);
   }
 
   const Start = () => {
+    setIsActive(true);
   }
 
   const Reset = () => {
@@ -17,12 +20,21 @@ function App() {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds(seconds === 0 ? 59 : seconds - 1);
-      console.log(seconds);
-    }, 1000);
+    if (isActive) {
+      const intervalSeconds = setInterval(() => {
+        if (seconds === 0) {
+          setMinutes(minutes - 1);
+        }
 
-    return () => clearInterval(interval);
+        setSeconds(seconds === 0 ? 59 : seconds - 1);
+      }, 1000);
+
+      // essa função é equivalente a componentWillUnmount
+      return () => {
+        clearInterval(intervalSeconds);
+      };
+    }
+
   });
 
   return (
