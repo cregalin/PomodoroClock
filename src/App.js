@@ -5,6 +5,9 @@ function App() {
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const WORKING = 1;
+  const BREAK = 2;
+  const [status, setStatus] = useState(WORKING);
 
   const Stop = () => {
     setIsActive(false);
@@ -15,6 +18,7 @@ function App() {
   }
 
   const Reset = () => {
+    setStatus(WORKING);
     setMinutes(25);
     setSeconds(0);
   }
@@ -22,7 +26,14 @@ function App() {
   useEffect(() => {
     if (isActive) {
       const intervalSeconds = setInterval(() => {
-        if (seconds === 0) {
+
+        if (minutes === 0 && seconds === 0 && status === WORKING) {
+          setMinutes(4);
+          setStatus(BREAK);
+        } else if (minutes === 0 && seconds === 0 && status === BREAK) {
+          setStatus(24);
+          setStatus(WORKING);
+        } else if (seconds === 0) {
           setMinutes(minutes - 1);
         }
 
@@ -30,9 +41,7 @@ function App() {
       }, 1000);
 
       // essa função é equivalente a componentWillUnmount
-      return () => {
-        clearInterval(intervalSeconds);
-      };
+      return () => { clearInterval(intervalSeconds); };
     }
 
   });
