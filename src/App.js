@@ -23,15 +23,23 @@ function App() {
     setSeconds(0);
   }
 
+  const PlayAudio = () => {
+    const audioEl = document.getElementsByClassName("audio-element")[0];
+    audioEl.play();
+  }
+
   useEffect(() => {
     if (isActive) {
       const intervalSeconds = setInterval(() => {
 
         if (minutes === 0 && seconds === 0 && status === WORKING) {
+          PlayAudio();
           setMinutes(4);
           setStatus(BREAK);
         } else if (minutes === 0 && seconds === 0 && status === BREAK) {
-          setStatus(24);
+          PlayAudio();
+
+          setMinutes(25);
           setStatus(WORKING);
         } else if (seconds === 0) {
           setMinutes(minutes - 1);
@@ -47,7 +55,7 @@ function App() {
   });
 
   return (
-    <div class="container">
+    <div className="container">
       <Card body outline color="secondary" className="text-center">
         <CardTitle tag="h5">Pomodoro Timer</CardTitle>
         <CardText>{minutes}:{seconds}</CardText>
@@ -61,6 +69,11 @@ function App() {
           <Button onClick={Reset} color="secondary" size="lg">
             Reset
           </Button>
+        <div>
+          <audio className="audio-element">
+            <source src="https://assets.coderrocketfuel.com/pomodoro-times-up.mp3"></source>
+          </audio>
+        </div>
         </div>
       </Card>
     </div>
